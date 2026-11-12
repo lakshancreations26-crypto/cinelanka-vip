@@ -89,21 +89,6 @@
     .empty-mark { width: 48px; height: 48px; display: grid; place-items: center; border: 1px solid rgba(121,201,255,.36); border-radius: 14px; color: var(--blue-light); font-size: 23px; }
     .empty h2 { margin: 0; font-size: 19px; font-weight: 900; }
     .empty p { max-width: 400px; margin: 0; color: var(--muted); font-size: 12px; font-weight: 600; }
-    .spotlight { margin: 0 0 42px; padding: clamp(18px,3vw,30px); border: 1px solid var(--line); border-radius: 14px; background: linear-gradient(145deg,rgba(19,44,69,.76),rgba(7,18,31,.76)); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
-    .spotlight-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }
-    .spotlight-kicker { color: var(--blue-light); font-size: 11px; font-weight: 850; letter-spacing: .08em; }
-    .spotlight h2 { margin: 4px 0 5px; font-size: clamp(22px,4vw,30px); line-height: 1.2; }
-    .spotlight h3 { margin: 22px 0 10px; font-size: 17px; }
-    .spotlight h4 { margin: 0 0 9px; color: var(--blue-light); font-size: 15px; }
-    .spotlight p { color: #d3e2f1; font-size: 13px; font-weight: 550; }
-    .spotlight-intro { max-width: 780px; margin: 0; }
-    .spotlight-mark { flex: 0 0 auto; display: grid; place-items: center; width: 58px; height: 58px; border: 1px solid rgba(121,201,255,.36); border-radius: 15px; color: var(--blue-light); background: rgba(31,83,124,.38); font-size: 19px; font-weight: 900; }
-    .alien-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,220px),1fr)); gap: 12px; }
-    .alien-card { padding: 16px; border: 1px solid var(--line); border-radius: 10px; background: rgba(5,17,30,.42); }
-    .alien-card p { margin: 8px 0 0; }
-    .alien-card strong { color: #eef7ff; }
-    .spotlight-note { margin: 20px 0 0; padding: 12px 14px; border-left: 3px solid var(--blue); border-radius: 5px; background: rgba(31,83,124,.2); }
-    .spotlight-note p { margin: 0; color: var(--muted); font-size: 12px; }
     .admin-banner { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 5px 0 18px; padding: 12px 15px; border: 1px solid rgba(121,201,255,.31); border-radius: 9px; background: rgba(12,40,65,.66); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
     .admin-banner strong { color: var(--blue-light); font-weight: 900; }
     .admin-banner p { margin: 2px 0 0; color: var(--muted); font-size: 11px; }
@@ -224,49 +209,6 @@
       </div>
     </section>
 
-    <article class="spotlight" id="ben10-alien-force" aria-labelledby="ben10-title">
-      <header class="spotlight-heading">
-        <div>
-          <span class="spotlight-kicker">TV SERIES · 2008 · SEASONS 01–03</span>
-          <h2 id="ben10-title">Ben 10: Alien Force</h2>
-          <p class="spotlight-intro">හැමෝම බලාගෙන හිටපු Alien Force ගැන සිංහලෙන් කතා කරමු. මුල් Ben 10 කතාමාලාවෙන් පස්සේ බෙන්ගේ Omnitrix එක වෙනස් විදිහට පෙනෙන හේතුවත්, මේ කතාවේ හමුවන ජීවීන් තුන්දෙනෙකුගේ හැකියාවන් සහ දුර්වලතාත් මෙතැනින් දැනගන්න.</p>
-        </div>
-        <span class="spotlight-mark" aria-hidden="true">AF</span>
-      </header>
-
-      <section aria-labelledby="omnitrix-title">
-        <h3 id="omnitrix-title">Omnitrix එක ගැන</h3>
-        <p>Grandpa Max සතුව Omnitrix එක තිබෙන බව කියන අවස්ථාව ගැන මේ කතාවේ මුලදී ප්‍රශ්න මතු වෙනවා. ඔයා දුන් විස්තරය අනුව, ඔරලෝසුව අලුත් එකක් නොවෙයි: මුල් කතාමාලාවේ අවසානයේ හානි වූ Omnitrix එක බෙන් නැවත ක්‍රියාත්මක කරනවා.</p>
-      </section>
-
-      <section aria-labelledby="aliens-title">
-        <h3 id="aliens-title">මෙහි හමුවන ජීවීන්</h3>
-        <div class="alien-grid">
-          <section class="alien-card" aria-labelledby="swampfire-title">
-            <h4 id="swampfire-title">Swampfire · “ගස් ගිනියා”</h4>
-            <p><strong>වර්ගය:</strong> Methanosian · <strong>මව් ග්‍රහලෝකය:</strong> Methanos</p>
-            <p><strong>හැකියාවන්:</strong> ගිනි සහ ගෑස් පාලනය, ශාක පාලනය, ශක්තිය සහ නැවත වැඩීම.</p>
-            <p><strong>දුර්වලතා:</strong> දැඩි සීතලේදී දුර්වල විය හැකි අතර, බරපතළ හානියකින් පසු නැවත සුව වීමට කාලය ගත විය හැකියි.</p>
-          </section>
-          <section class="alien-card" aria-labelledby="echo-title">
-            <h4 id="echo-title">Echo Echo · “සද්දේ සද්දේ”</h4>
-            <p><strong>වර්ගය:</strong> Sonorosian · <strong>මව් ග්‍රහලෝකය:</strong> Sonorosia</p>
-            <p><strong>හැකියාවන්:</strong> ශබ්ද තරංගවලින් ප්‍රහාර කිරීම, තමන්ගේ පිටපත් සෑදීම සහ ඉක්මනින් ගමන් කිරීම.</p>
-            <p><strong>දුර්වලතා:</strong> ශබ්දය උරාගන්නා හෝ එයට බලපෑමක් නොවන සතුරන්ට එරෙහිව ඔහුගේ ප්‍රධාන හැකියාවන් සීමා විය හැකියි.</p>
-          </section>
-          <section class="alien-card" aria-labelledby="humungousaur-title">
-            <h4 id="humungousaur-title">Humungousaur · “මහා උරඟ දැවැන්තයා”</h4>
-            <p><strong>වර්ගය:</strong> Vaxasaurian · <strong>මව් ග්‍රහලෝකය:</strong> Vaxasauria</p>
-            <p><strong>හැකියාවන්:</strong> විශාල ශක්තිය, ප්‍රමාණයෙන් වැඩි වීම, ශක්තිමත් සම සහ වලිගයෙන් පහර දීම.</p>
-            <p><strong>දුර්වලතා:</strong> කුඩා ඉඩවල ගමන් කිරීම අපහසු වීම සහ වේගවත් ප්‍රතිවාදීන්ට මුහුණ දීම.</p>
-          </section>
-        </div>
-      </section>
-
-      <aside class="spotlight-note">
-        <p>මෙය කතාමාලාව පිළිබඳ ලිපියක් පමණයි. වීඩියෝ ගොනුවක් හෝ download link එකක් මෙහි ඇතුළත් කර නැහැ.</p>
-      </aside>
-    </article>
   </main>
 
   <footer class="footer">
