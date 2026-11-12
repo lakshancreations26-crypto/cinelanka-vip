@@ -96,6 +96,9 @@
     .footer-inner { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
     .footer button { border: 0; padding: 0; color: #777980; background: transparent; font-size: 11px; }
     .footer button:hover { color: var(--blue-light); }
+    .footer-share { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+    .footer-share a { color: var(--blue-light); overflow-wrap: anywhere; }
+    .footer-share .button { min-height: 32px; padding: 6px 12px; border: 1px solid rgba(121,201,255,.32); border-radius: 7px; color: var(--text); background: rgba(31,83,124,.38); font-size: 11px; font-weight: 800; }
     dialog { width: min(510px,calc(100% - 28px)); max-height: 90vh; overflow: auto; padding: 0; border: 1px solid rgba(151,206,247,.28); border-radius: 14px; color: var(--text); background: rgba(9,24,40,.91); box-shadow: 0 25px 85px #000c; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
     dialog::backdrop { background: #000b; backdrop-filter: blur(4px); }
     .modal-head { display: flex; align-items: start; justify-content: space-between; gap: 15px; padding: 21px 23px 10px; }
@@ -211,6 +214,7 @@
     <div class="shell footer-inner">
       <span>© <span id="year"></span> CineLanka VIP. Movies &amp; TV Series.</span>
       <span>Content is published by its owner or authorized distributor. <button id="footer-admin-login" type="button">Site administrator</button></span>
+      <span class="footer-share"><a href="https://lakshancreations26-crypto.github.io/cinelanka-vip/">https://lakshancreations26-crypto.github.io/cinelanka-vip/</a><button class="button" id="copy-site-link" type="button">Copy live link</button></span>
     </div>
   </footer>
 
@@ -278,6 +282,29 @@
       toast.hidden = false;
       window.clearTimeout(showToast.timer);
       showToast.timer = window.setTimeout(() => { toast.hidden = true; }, 4200);
+    }
+
+    async function copySiteLink() {
+      const link = "https://lakshancreations26-crypto.github.io/cinelanka-vip/";
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(link);
+        } else {
+          const field = document.createElement("textarea");
+          field.value = link;
+          field.setAttribute("readonly", "");
+          field.style.position = "fixed";
+          field.style.opacity = "0";
+          document.body.appendChild(field);
+          field.select();
+          const copied = document.execCommand("copy");
+          field.remove();
+          if (!copied) throw new Error("Clipboard copy was not available.");
+        }
+        showToast("Live link eka copy una.");
+      } catch {
+        showToast(`Copy karanna bari una. Link eka: ${link}`);
+      }
     }
 
     function escapeHtml(value) {
@@ -388,6 +415,7 @@
     }));
     search.addEventListener("input", render);
     document.querySelector("#clear-search").addEventListener("click", () => { search.value = ""; render(); });
+    document.querySelector("#copy-site-link").addEventListener("click", copySiteLink);
     document.querySelectorAll("#admin-login-button, #footer-admin-login").forEach(button => button.addEventListener("click", () => dialogs.login.showModal()));
     document.querySelector("#admin-upload-button").addEventListener("click", () => dialogs.upload.showModal());
     document.querySelectorAll("[data-close]").forEach(button => button.addEventListener("click", () => button.closest("dialog").close()));
