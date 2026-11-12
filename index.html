@@ -97,6 +97,10 @@
     .story-intro { max-width: 850px; }
     .trailer-frame { width: min(100%,900px); aspect-ratio: 16 / 9; margin-top: 12px; overflow: hidden; border: 1px solid var(--line); border-radius: 10px; background: #02070c; }
     .trailer-frame iframe { width: 100%; height: 100%; display: block; border: 0; }
+    .feature-video { margin: 22px 0 30px; padding: clamp(14px,2.4vw,22px); border: 1px solid var(--line); border-radius: 14px; background: linear-gradient(145deg,rgba(19,44,69,.76),rgba(7,18,31,.76)); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
+    .feature-video h1 { margin: 0; font-size: clamp(20px,3vw,26px); }
+    .feature-video p { margin: 5px 0 12px; color: var(--muted); font-size: 12px; }
+    .feature-video video { display: block; width: 100%; max-height: min(72vh,620px); border: 1px solid var(--line); border-radius: 10px; background: #02070c; object-fit: contain; }
     .story-notice { margin-top: 20px !important; padding: 12px 14px; border-left: 3px solid var(--blue); border-radius: 5px; color: var(--muted) !important; background: rgba(31,83,124,.2); font-size: 12px !important; }
     .admin-banner { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 5px 0 18px; padding: 12px 15px; border: 1px solid rgba(121,201,255,.31); border-radius: 9px; background: rgba(12,40,65,.66); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
     .admin-banner strong { color: var(--blue-light); font-weight: 900; }
@@ -194,6 +198,15 @@
         <button class="button small" id="admin-upload-button" type="button">＋ Add movie</button>
       </div>
     </div>
+
+    <section class="feature-video" aria-labelledby="feature-video-title">
+      <h1 id="feature-video-title">Featured video</h1>
+      <p>Plays automatically on mute and loops. Use the player controls to turn sound on or pause.</p>
+      <video autoplay muted loop playsinline controls preload="auto" aria-label="Featured video, plays on mute and repeats">
+        <source src="./assets/site-feature.mp4" type="video/mp4">
+        Your browser does not support HTML video.
+      </video>
+    </section>
 
     <section id="catalog">
       <div class="page-top">
