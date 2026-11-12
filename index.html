@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="si">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07111d">
+  <title>CineLanka VIP — Movies &amp; TV Series</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #07111d;
+      --panel: rgba(13, 27, 44, .68);
+      --panel-raised: rgba(19, 41, 65, .74);
+      --text: #f1f7ff;
+      --muted: #a7bbcf;
+      --blue: #79c9ff;
+      --blue-light: #b7e7ff;
+      --blue-deep: #124a78;
+      --line: rgba(151, 206, 247, .18);
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body {
+      margin: 0; min-height: 100vh;
+      background:
+        radial-gradient(ellipse at 12% 12%, rgba(32, 113, 174, .23), transparent 38%),
+        radial-gradient(ellipse at 87% 35%, rgba(23, 71, 124, .26), transparent 40%),
+        linear-gradient(145deg, #07111d, #0b1c2f 52%, #070d17);
+      background-attachment: fixed;
+      color: var(--text);
+      font: 600 14px/1.5 Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
+    .shell { max-width: 1500px; margin: auto; padding: 0 30px; }
+    .topbar { position: sticky; top: 0; z-index: 5; border-bottom: 1px solid var(--line); background: rgba(5,13,23,.66); backdrop-filter: blur(20px) saturate(145%); -webkit-backdrop-filter: blur(20px) saturate(145%); }
+    .nav { min-height: 72px; display: flex; align-items: center; gap: 29px; }
+    .brand { display: flex; flex: 0 0 auto; align-items: center; }
+    .brand img { display: block; width: 126px; height: 58px; object-fit: cover; object-position: center 48%; border-radius: 7px; }
+    .nav-links { display: flex; align-items: center; gap: 24px; color: #dcecff; font-size: 13px; font-weight: 800; white-space: nowrap; }
+    .nav-links a { transition: color .15s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--blue-light); }
+    .nav-actions { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+    .search { display: flex; align-items: center; gap: 8px; width: 204px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 9px; color: var(--muted); background: rgba(9,24,40,.62); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .search input { width: 100%; min-width: 0; border: 0; outline: 0; color: var(--text); background: transparent; }
+    .search input::placeholder { color: #91a7bc; }
+    .button { border: 1px solid rgba(187,231,255,.46); border-radius: 9px; padding: 10px 15px; color: #071522; background: linear-gradient(135deg,var(--blue-light),var(--blue) 52%,#4698db); box-shadow: 0 5px 17px rgba(58,150,214,.19); font-weight: 850; transition: filter .16s, transform .16s, box-shadow .16s; }
+    .button:hover { filter: brightness(1.09); transform: translateY(-1px); box-shadow: 0 8px 22px rgba(58,150,214,.3); }
+    .button.secondary { color: #dceeff; background: rgba(10,36,61,.64); border: 1px solid rgba(121,201,255,.36); box-shadow: inset 0 1px rgba(255,255,255,.06); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+    .button.danger { color: #e6f4ff; background: linear-gradient(135deg,#102b47,#071522); border-color: rgba(121,201,255,.3); }
+    .button.small { padding: 8px 11px; font-size: 12px; }
+    main { min-height: 72vh; }
+    .page-top { display: flex; align-items: end; justify-content: space-between; gap: 15px; padding: 24px 0 17px; }
+    .page-top h1 { margin: 0; font-size: 23px; font-weight: 850; letter-spacing: -.5px; }
+    .page-top p { margin: 4px 0 0; color: var(--muted); font-size: 12px; font-weight: 650; }
+    .filters { display: flex; gap: 7px; }
+    .filter { border: 1px solid var(--line); border-radius: 7px; padding: 7px 12px; color: #b8cce0; background: rgba(8,24,41,.63); font-size: 12px; font-weight: 800; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+    .filter.active { border-color: #80cfff; color: #061421; background: linear-gradient(135deg,var(--blue-light),var(--blue)); }
+    .section-label { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 9px 0 21px; color: #edf6ff; font-size: 19px; font-weight: 900; letter-spacing: -.3px; }
+    .section-label::before, .section-label::after { content: ""; height: 1px; flex: 1; background: linear-gradient(90deg,transparent,rgba(127,193,237,.3)); }
+    .section-label::after { background: linear-gradient(90deg,rgba(127,193,237,.3),transparent); }
+    .catalog-layout { display: grid; grid-template-columns: minmax(0,1fr) 238px; gap: 16px; align-items: start; padding-bottom: 42px; }
+    .grid { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 13px; }
+    .card { position: relative; min-width: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 9px; background: var(--panel); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); transition: transform .18s, border-color .18s, box-shadow .18s; }
+    .card:hover { z-index: 1; transform: translateY(-3px); border-color: rgba(121,201,255,.47); box-shadow: 0 12px 28px rgba(0,0,0,.4); }
+    .poster { position: relative; overflow: hidden; aspect-ratio: .72; background: linear-gradient(145deg,#222631,#12141a); }
+    .poster img { width: 100%; height: 100%; display: block; object-fit: cover; }
+    .poster::after { content: ""; position: absolute; inset: 34% 0 0; background: linear-gradient(0deg,rgba(0,0,0,.92),transparent); pointer-events: none; }
+    .poster-placeholder { position: absolute; inset: 0; display: grid; place-items: center; color: #50525b; font-size: 45px; font-weight: 900; letter-spacing: -4px; background: radial-gradient(ellipse at 50% 40%,#34333a,#15171d 72%); }
+    .pill { position: absolute; z-index: 1; top: 8px; left: 8px; padding: 3px 6px; border: 1px solid rgba(147,210,255,.34); border-radius: 4px; color: #eaf6ff; background: rgba(13,66,108,.91); font-size: 9px; font-weight: 900; letter-spacing: .2px; }
+    .pill.paid { color: #061421; background: var(--blue-light); }
+    .rating { position: absolute; z-index: 1; top: 8px; right: 8px; padding: 3px 5px; border-radius: 4px; color: #061421; background: var(--blue-light); font-size: 10px; font-weight: 900; }
+    .poster-caption { position: absolute; z-index: 1; right: 9px; bottom: 9px; left: 9px; overflow: hidden; color: #fff; font-size: 11px; font-weight: 750; text-overflow: ellipsis; white-space: nowrap; }
+    .card-info { padding: 9px 10px 11px; }
+    .card-info h3 { overflow: hidden; margin: 0; font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
+    .meta { display: flex; justify-content: space-between; gap: 8px; margin-top: 4px; color: var(--muted); font-size: 10px; }
+    .card-actions { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-top: 9px; }
+    .price { color: var(--blue-light); font-size: 11px; font-weight: 850; }
+    .sidebar { display: grid; gap: 12px; }
+    .side-card { padding: 16px; border: 1px solid var(--line); border-radius: 10px; background: linear-gradient(145deg,rgba(19,44,69,.66),rgba(7,18,31,.7)); backdrop-filter: blur(17px); -webkit-backdrop-filter: blur(17px); }
+    .side-card h2 { margin: 0 0 5px; font-size: 15px; font-weight: 850; }
+    .side-card p { margin: 0 0 13px; color: var(--muted); font-size: 11px; font-weight: 600; }
+    .side-card .button { width: 100%; }
+    .brand-badge { width: 100%; padding: 8px; border-radius: 9px; background: rgba(4,13,24,.62); }
+    .brand-badge img { display: block; width: 100%; height: 142px; object-fit: contain; }
+    .empty { grid-column: 1 / -1; min-height: 310px; display: grid; justify-items: center; align-content: center; gap: 10px; padding: 28px; border: 1px dashed rgba(139,199,241,.3); border-radius: 10px; text-align: center; background: radial-gradient(ellipse at 50% 0%,rgba(54,128,184,.16),transparent 65%),rgba(8,22,37,.58); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+    .empty-mark { width: 48px; height: 48px; display: grid; place-items: center; border: 1px solid rgba(121,201,255,.36); border-radius: 14px; color: var(--blue-light); font-size: 23px; }
+    .empty h2 { margin: 0; font-size: 19px; font-weight: 900; }
+    .empty p { max-width: 400px; margin: 0; color: var(--muted); font-size: 12px; font-weight: 600; }
+    .admin-banner { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 5px 0 18px; padding: 12px 15px; border: 1px solid rgba(121,201,255,.31); border-radius: 9px; background: rgba(12,40,65,.66); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+    .admin-banner strong { color: var(--blue-light); font-weight: 900; }
+    .admin-banner p { margin: 2px 0 0; color: var(--muted); font-size: 11px; }
+    .footer { padding: 22px 0 30px; border-top: 1px solid #222328; color: var(--muted); font-size: 11px; }
+    .footer-inner { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .footer button { border: 0; padding: 0; color: #777980; background: transparent; font-size: 11px; }
+    .footer button:hover { color: var(--blue-light); }
+    dialog { width: min(510px,calc(100% - 28px)); max-height: 90vh; overflow: auto; padding: 0; border: 1px solid rgba(151,206,247,.28); border-radius: 14px; color: var(--text); background: rgba(9,24,40,.91); box-shadow: 0 25px 85px #000c; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
+    dialog::backdrop { background: #000b; backdrop-filter: blur(4px); }
+    .modal-head { display: flex; align-items: start; justify-content: space-between; gap: 15px; padding: 21px 23px 10px; }
+    .modal-head h2 { margin: 0; font-size: 19px; }
+    .modal-head p { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+    .close { width: 30px; height: 30px; border: 1px solid #33353b; border-radius: 8px; color: #aaa; background: #1b1c22; font-size: 18px; }
+    .form { display: grid; gap: 12px; padding: 11px 23px 23px; }
+    .field { display: grid; gap: 5px; color: #e5f2ff; font-size: 12px; font-weight: 800; }
+    .field input, .field select, .field textarea { width: 100%; min-height: 40px; padding: 9px 11px; outline: none; border: 1px solid var(--line); border-radius: 8px; color: var(--text); background: rgba(5,17,30,.7); }
+    .field textarea { min-height: 68px; resize: vertical; }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(121,201,255,.12); }
+    .field input[type=file] { color: var(--muted); }
+    .check-row { display: flex; align-items: start; gap: 8px; color: #c5c3be; font-weight: 500; }
+    .hint { margin: -4px 0 0; color: var(--muted); font-size: 10px; }
+    .progress { height: 5px; overflow: hidden; border-radius: 5px; background: #282930; }
+    .progress span { width: 0; height: 100%; display: block; background: linear-gradient(90deg,var(--blue-deep),var(--blue-light)); transition: width .15s; }
+    .payment-box { padding: 13px; border: 1px solid rgba(121,201,255,.3); border-radius: 9px; background: rgba(14,48,77,.58); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .payment-box strong { display: block; color: var(--blue-light); font-weight: 850; }
+    .payment-box p { margin: 4px 0 0; color: #c6c0b5; font-size: 11px; }
+    .queue-item { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+    .queue-item:last-child { border-bottom: 0; }
+    .queue-item strong, .queue-item small { display: block; }
+    .queue-item small { color: var(--muted); font-size: 10px; }
+    .toast { position: fixed; right: 20px; bottom: 20px; z-index: 10; max-width: min(420px,calc(100% - 40px)); padding: 12px 15px; border: 1px solid #37343a; border-radius: 10px; color: var(--text); background: #1b1c22; box-shadow: 0 10px 35px #0009; }
+    .toast[hidden] { display: none; }
+    @media (max-width: 1100px) {
+      .nav { gap: 18px; }
+      .nav-links { gap: 15px; font-size: 12px; }
+      .catalog-layout { grid-template-columns: minmax(0,1fr) 205px; }
+      .grid { grid-template-columns: repeat(4,minmax(0,1fr)); }
+    }
+    @media (max-width: 760px) {
+      .shell { padding: 0 16px; }
+      .nav { min-height: 64px; gap: 10px; }
+      .brand img { width: 94px; height: 50px; }
+      .nav-links { display: none; }
+      .search { width: min(42vw,220px); padding: 8px; }
+      .catalog-layout { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 9px; }
+      .sidebar { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .brand-badge img { height: 95px; }
+    }
+    @media (max-width: 480px) {
+      .shell { padding: 0 12px; }
+      .nav { gap: 7px; }
+      .brand img { width: 76px; height: 47px; }
+      .search { flex: 1; width: auto; }
+      .nav-actions { gap: 6px; }
+      .nav-actions .button { padding: 8px 9px; font-size: 11px; }
+      .page-top { align-items: start; flex-direction: column; padding-top: 18px; }
+      .grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; }
+      .card-info { padding: 8px; }
+      .card-actions { align-items: start; flex-direction: column; }
+      .card-actions .button { width: 100%; }
+      .sidebar { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell nav">
+      <a class="brand" href="/" aria-label="CineLanka VIP home"><img src="/cinelanka-logo.jpg" alt="CineLanka VIP — Movies and TV Series"></a>
+      <nav class="nav-links" aria-label="Movie categories">
+        <a class="active" href="#catalog" data-nav-filter="All">▣ All Movies</a>
+        <a href="#catalog" data-nav-filter="TV Series">▣ TV Shows</a>
+        <a href="#catalog">◎ Languages</a>
+        <a href="#catalog">▰ Genres</a>
+        <a href="#catalog">▦ Years</a>
+        <a href="#catalog">◈ Collections</a>
+      </nav>
+      <div class="nav-actions">
+        <label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Search..." aria-label="Search movies"></label>
+        <button class="button small" id="admin-login-button" type="button">Admin login</button>
+        <button class="button small" id="admin-logout-button" type="button" hidden>Log out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <div id="admin-banner" class="admin-banner" hidden>
+      <div><strong>Admin mode</strong><p>Login una oyā witharai film upload karanna saha payment receipts review karanna puluwan.</p></div>
+      <div class="hero-actions" style="margin:0">
+        <button class="button small" id="admin-payments-button" type="button">Payment receipts</button>
+        <button class="button small" id="admin-upload-button" type="button">＋ Add movie</button>
+      </div>
+    </div>
+
+    <section id="catalog">
+      <div class="page-top">
+        <div><h1>Movies &amp; TV Series</h1><p id="catalog-caption">CineLanka VIP collection</p></div>
+        <div class="filters" role="group" aria-label="Filter titles">
+          <button class="filter active" data-filter="All" type="button">All</button>
+          <button class="filter" data-filter="Movie" type="button">Movies</button>
+          <button class="filter" data-filter="TV Series" type="button">TV Shows</button>
+        </div>
+      </div>
+      <h2 class="section-label">Recently Added</h2>
+      <div class="catalog-layout">
+        <div class="grid" id="catalog-grid" aria-live="polite"></div>
+        <aside class="sidebar">
+          <div class="side-card brand-badge"><img src="/cinelanka-logo.jpg" alt="CineLanka VIP Movies and TV Series"></div>
+          <div class="side-card">
+            <h2>Oyage next movie eka balanna</h2>
+            <p>Collection ekata aluth films add karanawa. Oyata ona eka hoyanna search karanna.</p>
+            <button class="button secondary small" id="clear-search" type="button">Clear search</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="shell footer-inner">
+      <span>© <span id="year"></span> CineLanka VIP. Movies &amp; TV Series.</span>
+      <span>Content is published by its owner or authorized distributor. <button id="footer-admin-login" type="button">Site administrator</button></span>
+    </div>
+  </footer>
+
+  <dialog id="login-dialog">
+    <div class="modal-head"><div><h2>Administrator login</h2><p>Uploads are restricted to the site owner.</p></div><button class="close" type="button" data-close aria-label="Close">×</button></div>
+    <form class="form" id="login-form">
+      <label class="field">Admin password<input name="password" type="password" autocomplete="current-password" required minlength="14"></label>
+      <p class="hint">Oyāge password eka server eka start karaddi terminal eke enter karanna. Chat ekata password eka danna epa.</p>
+      <button class="button" type="submit">Sign in</button>
+    </form>
+  </dialog>
+
+  <dialog id="upload-dialog">
+    <div class="modal-head"><div><h2>Add movie or TV series</h2><p>This upload is private to the authenticated site administrator.</p></div><button class="close" type="button" data-close aria-label="Close">×</button></div>
+    <form class="form" id="upload-form">
+      <label class="field">Title<input name="title" maxlength="100" required placeholder="Movie or series title"></label>
+      <label class="field">Type<select name="type"><option>Movie</option><option>TV Series</option></select></label>
+      <label class="field">Genre<input name="genre" maxlength="80" placeholder="Drama, action..."></label>
+      <label class="field">Description<textarea name="description" maxlength="500" placeholder="Short description"></textarea></label>
+      <label class="field">Access<select name="access"><option value="free">Free download</option><option value="paid">Paid access</option></select></label>
+      <label class="field" id="price-field" hidden>Price (LKR)<input name="price" type="number" min="1" step="1" placeholder="500"></label>
+      <label class="field">Movie / episode video<input name="video" type="file" accept="video/*,.mkv,.avi" required></label>
+      <label class="field">Poster image<input name="cover" type="file" accept="image/*" required></label>
+      <label class="field check-row"><input name="rights" type="checkbox" required> I own this content or have permission to distribute it.</label>
+      <div class="progress" id="upload-progress" hidden><span></span></div>
+      <p class="hint" id="upload-status">Video is streamed straight to the server. Keep this page open until upload finishes.</p>
+      <button class="button" id="upload-submit" type="submit">Upload to collection</button>
+    </form>
+  </dialog>
+
+  <dialog id="payment-dialog">
+    <div class="modal-head"><div><h2 id="payment-title">Request access</h2><p>EZ Cash payment details and receipt submission.</p></div><button class="close" type="button" data-close aria-label="Close">×</button></div>
+    <form class="form" id="payment-form">
+      <div class="payment-box"><strong>EZ Cash · 077 927 3876</strong><p>Payment karala receipt eka pahalin upload karanna. Receipt eka admin kenek verify karata passe access unlock wenawa.</p></div>
+      <label class="field">Payment receipt<input name="receipt" type="file" accept="image/*,.pdf" required></label>
+      <p class="hint">Receipt eka review karana thuru download eka locked.</p>
+      <button class="button" type="submit">Submit receipt</button>
+    </form>
+  </dialog>
+
+  <dialog id="payments-dialog">
+    <div class="modal-head"><div><h2>EZ Cash receipts</h2><p>Review and approve a receipt to unlock the matching title for that browser.</p></div><button class="close" type="button" data-close aria-label="Close">×</button></div>
+    <div class="form" id="payment-queue"></div>
+  </dialog>
+  <div class="toast" id="toast" role="status" hidden></div>
+
+  <script>
+    const titles = [];
+    let activeFilter = "All";
+    let requestedTitle = null;
+    let isAdmin = false;
+    const grid = document.querySelector("#catalog-grid");
+    const search = document.querySelector("#search");
+    const dialogs = {
+      login: document.querySelector("#login-dialog"),
+      upload: document.querySelector("#upload-dialog"),
+      payment: document.querySelector("#payment-dialog"),
+      payments: document.querySelector("#payments-dialog")
+    };
+
+    function showToast(message) {
+      const toast = document.querySelector("#toast");
+      toast.textContent = message;
+      toast.hidden = false;
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => { toast.hidden = true; }, 4200);
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      })[char]);
+    }
+
+    async function api(url, options = {}) {
+      const response = await fetch(url, { credentials: "same-origin", ...options });
+      if (!response.ok) {
+        const result = await response.json().catch(() => ({}));
+        throw new Error(result.error || `Request failed (${response.status})`);
+      }
+      return response.status === 204 ? null : response.json();
+    }
+
+    async function loadSession() {
+      const session = await api("/api/session");
+      isAdmin = session.isAdmin;
+      document.querySelector("#admin-login-button").hidden = isAdmin;
+      document.querySelector("#admin-logout-button").hidden = !isAdmin;
+      document.querySelector("#admin-banner").hidden = !isAdmin;
+    }
+
+    async function loadTitles() {
+      const result = await api("/api/titles");
+      titles.splice(0, titles.length, ...result.titles);
+      document.querySelector("#catalog-caption").textContent = `${titles.length} ${titles.length === 1 ? "title" : "titles"} in the collection`;
+      render();
+    }
+
+    function render() {
+      const query = search.value.trim().toLowerCase();
+      const visible = titles.filter(item =>
+        (activeFilter === "All" || item.type === activeFilter) &&
+        `${item.title} ${item.type} ${item.genre} ${item.year}`.toLowerCase().includes(query)
+      );
+      if (!titles.length) {
+        grid.innerHTML = `<div class="empty">
+          <span class="empty-mark" aria-hidden="true">▣</span>
+          <h2>Thama movies upload karala naha</h2>
+          <p>Aluth titles add karana thuru CineLanka VIP collection eka mehema penawa.</p>
+          ${isAdmin ? '<button class="button small" data-empty-upload type="button">Palamu movie eka add karanna</button>' : '<span>Aluth titles passe me collection eke balanna.</span>'}
+        </div>`;
+        return;
+      }
+      if (!visible.length) {
+        grid.innerHTML = '<div class="empty"><h2>Title ekak hambune naha</h2><p>Search eka clear karala nathnam wena category ekak select karanna.</p></div>';
+        return;
+      }
+      grid.innerHTML = visible.map(item => {
+        const free = item.access === "free";
+        const unlocked = free || item.unlocked || isAdmin;
+        const button = unlocked
+          ? `<a class="button small" href="/media/${escapeHtml(item.id)}/video" download>↓ Download</a>`
+          : `<button class="button small secondary" data-action="unlock" data-id="${escapeHtml(item.id)}" type="button">Unlock · LKR ${Number(item.price)}</button>`;
+        const poster = item.cover
+          ? `<img loading="lazy" src="/media/${escapeHtml(item.id)}/cover" alt="${escapeHtml(item.title)} poster">`
+          : `<span class="poster-placeholder">${escapeHtml(item.title.slice(0, 2).toUpperCase())}</span>`;
+        return `<article class="card">
+          <div class="poster">
+            ${poster}
+            <span class="pill ${free ? "" : "paid"}">${free ? "WEB-DL" : "PREMIUM"}</span>
+            <span class="rating">★ ${escapeHtml(item.rating || "New")}</span>
+            <span class="poster-caption">${escapeHtml(item.title)} (${escapeHtml(String(item.year))})</span>
+          </div>
+          <div class="card-info">
+            <h3 title="${escapeHtml(item.title)}">${escapeHtml(item.title)}</h3>
+            <div class="meta"><span>${escapeHtml(item.type)} · ${escapeHtml(item.genre || "New release")}</span><span>${escapeHtml(String(item.year))}</span></div>
+            <div class="card-actions"><span class="price">${free ? "FREE" : `LKR ${Number(item.price)}`}</span>${button}</div>
+          </div>
+        </article>`;
+      }).join("");
+    }
+
+    document.querySelectorAll("[data-filter]").forEach(button => button.addEventListener("click", () => {
+      activeFilter = button.dataset.filter;
+      document.querySelectorAll("[data-filter]").forEach(node => node.classList.toggle("active", node === button));
+      render();
+    }));
+    document.querySelectorAll("[data-nav-filter]").forEach(link => link.addEventListener("click", () => {
+      activeFilter = link.dataset.navFilter;
+      document.querySelectorAll("[data-filter]").forEach(node => node.classList.toggle("active", node.dataset.filter === activeFilter));
+      render();
+    }));
+    search.addEventListener("input", render);
+    document.querySelector("#clear-search").addEventListener("click", () => { search.value = ""; render(); });
+    document.querySelectorAll("#admin-login-button, #footer-admin-login").forEach(button => button.addEventListener("click", () => dialogs.login.showModal()));
+    document.querySelector("#admin-upload-button").addEventListener("click", () => dialogs.upload.showModal());
+    document.querySelectorAll("[data-close]").forEach(button => button.addEventListener("click", () => button.closest("dialog").close()));
+    document.querySelector("#upload-form [name=access]").addEventListener("change", event => {
+      const field = document.querySelector("#price-field");
+      field.hidden = event.target.value !== "paid";
+      field.querySelector("input").required = !field.hidden;
+    });
+
+    document.querySelector("#login-form").addEventListener("submit", async event => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      try {
+        await api("/api/session", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ password: form.elements.password.value }) });
+        form.reset();
+        dialogs.login.close();
+        await loadSession();
+        render();
+        showToast("Admin login successful.");
+      } catch (error) { showToast(error.message); }
+    });
+
+    document.querySelector("#admin-logout-button").addEventListener("click", async () => {
+      try {
+        await api("/api/session", { method: "DELETE" });
+        isAdmin = false;
+        await loadSession();
+        render();
+        showToast("Logged out.");
+      } catch (error) { showToast(error.message); }
+    });
+
+    function uploadFile(url, file, progress) {
+      return new Promise((resolve, reject) => {
+        const request = new XMLHttpRequest();
+        request.open("PUT", url);
+        request.setRequestHeader("Content-Type", file.type || "application/octet-stream");
+        request.setRequestHeader("X-File-Name", encodeURIComponent(file.name));
+        request.upload.addEventListener("progress", event => { if (event.lengthComputable) progress(event.loaded / event.total); });
+        request.addEventListener("load", () => {
+          if (request.status >= 200 && request.status < 300) resolve();
+          else {
+            let message = `Upload failed (${request.status})`;
+            try { message = JSON.parse(request.responseText).error || message; } catch {}
+            reject(new Error(message));
+          }
+        });
+        request.addEventListener("error", () => reject(new Error("Upload connection failed.")));
+        request.send(file);
+      });
+    }
+
+    document.querySelector("#upload-form").addEventListener("submit", async event => {
+      event.preventDefault();
+      if (!isAdmin) { showToast("Admin login required."); return; }
+      const form = event.currentTarget;
+      const data = new FormData(form);
+      const video = data.get("video");
+      const cover = data.get("cover");
+      const button = document.querySelector("#upload-submit");
+      const progress = document.querySelector("#upload-progress");
+      const bar = progress.querySelector("span");
+      const status = document.querySelector("#upload-status");
+      button.disabled = true;
+      progress.hidden = false;
+      status.textContent = "Creating title...";
+      try {
+        const item = await api("/api/titles", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title: data.get("title"), type: data.get("type"), genre: data.get("genre"),
+            description: data.get("description"), access: data.get("access"),
+            price: data.get("price"), videoName: video.name, coverName: cover.name, rights: data.has("rights")
+          })
+        });
+        status.textContent = "Uploading poster...";
+        await uploadFile(`/api/titles/${item.id}/cover`, cover, fraction => { bar.style.width = `${Math.round(fraction * 20)}%`; });
+        status.textContent = "Uploading video...";
+        await uploadFile(`/api/titles/${item.id}/video`, video, fraction => { bar.style.width = `${20 + Math.round(fraction * 80)}%`; });
+        form.reset();
+        document.querySelector("#price-field").hidden = true;
+        document.querySelector("#price-field input").required = false;
+        dialogs.upload.close();
+        activeFilter = "All";
+        document.querySelectorAll("[data-filter]").forEach(node => node.classList.toggle("active", node.dataset.filter === "All"));
+        await loadTitles();
+        showToast("Movie eka successfully collection ekata add kala.");
+      } catch (error) {
+        status.textContent = error.message;
+        showToast(error.message);
+      } finally {
+        button.disabled = false;
+        progress.hidden = true;
+        bar.style.width = "0";
+      }
+    });
+
+    grid.addEventListener("click", async event => {
+      if (event.target.closest("[data-empty-upload]")) { dialogs.upload.showModal(); return; }
+      const button = event.target.closest("[data-action=unlock]");
+      if (!button) return;
+      requestedTitle = titles.find(title => title.id === button.dataset.id);
+      if (!requestedTitle) return;
+      document.querySelector("#payment-title").textContent = `Unlock ${requestedTitle.title} · LKR ${Number(requestedTitle.price)}`;
+      dialogs.payment.showModal();
+    });
+
+    document.querySelector("#payment-form").addEventListener("submit", async event => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const receipt = new FormData(form).get("receipt");
+      if (!requestedTitle || !receipt.size) return;
+      try {
+        const request = await api("/api/payment-requests", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ titleId: requestedTitle.id })
+        });
+        await uploadFile(`/api/payment-requests/${request.id}/receipt`, receipt, () => {});
+        form.reset();
+        dialogs.payment.close();
+        showToast("Receipt eka admin review ekata yewwa. Verify karana thuru title eka locked.");
+      } catch (error) { showToast(error.message); }
+    });
+
+    document.querySelector("#admin-payments-button").addEventListener("click", async () => {
+      try {
+        const result = await api("/api/admin/payments");
+        const queue = document.querySelector("#payment-queue");
+        queue.innerHTML = result.payments.length ? result.payments.map(payment => `
+          <div class="queue-item">
+            <div><strong>${escapeHtml(payment.title)}</strong><small>LKR ${Number(payment.price)} · ${escapeHtml(payment.createdAt)}</small>
+              <a class="hint" href="/api/admin/payments/${escapeHtml(payment.id)}/receipt" target="_blank" rel="noopener">View receipt</a></div>
+            <button class="button small" type="button" data-approve="${escapeHtml(payment.id)}">Approve</button>
+          </div>`).join("") : '<p class="hint">Pending receipts naha.</p>';
+        dialogs.payments.showModal();
+      } catch (error) { showToast(error.message); }
+    });
+
+    document.querySelector("#payment-queue").addEventListener("click", async event => {
+      const button = event.target.closest("[data-approve]");
+      if (!button) return;
+      try {
+        await api(`/api/admin/payments/${button.dataset.approve}/approve`, { method: "POST" });
+        button.closest(".queue-item").remove();
+        if (!document.querySelector(".queue-item")) document.querySelector("#payment-queue").innerHTML = '<p class="hint">Pending receipts naha.</p>';
+        await loadTitles();
+        showToast("Payment verify kala. Customer access unlock una.");
+      } catch (error) { showToast(error.message); }
+    });
+
+    async function initialize() {
+      document.querySelector("#year").textContent = new Date().getFullYear();
+      try {
+        await loadSession();
+        await loadTitles();
+      } catch (error) {
+        grid.innerHTML = `<div class="empty"><h2>Website server eka connect wenne naha</h2><p>${escapeHtml(error.message)} Start.ps1 run karala website server eka patan ganna.</p></div>`;
+      }
+    }
+    initialize();
+  </script>
+</body>
+</html>
