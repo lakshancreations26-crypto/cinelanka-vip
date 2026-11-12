@@ -7,10 +7,15 @@ access require the administrator password.
 ## Public GitHub Pages preview
 
 GitHub Pages can serve the public, static website preview at
-<https://lakshancreations26-crypto.github.io/cinelanka-vip/>. GitHub Pages
-cannot run this project's Python server. The preview intentionally disables
-admin login and clearly states that uploads, downloads and payment verification
-are unavailable until the Python backend is deployed separately.
+<https://lakshancreations26-crypto.github.io/cinelanka-vip/>. The preview also
+plays the CC0 flower video at `assets/flower-loop.mp4` automatically on mute in
+a loop; visitors can use the player controls to pause or enable sound. The
+video is from the MDN interactive examples CC0 collection:
+<https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4>.
+GitHub Pages cannot run this project's Python server. The preview intentionally
+disables admin login and clearly states that catalog uploads, downloads and
+payment verification are unavailable until the Python backend is deployed
+separately.
 
 ## Run locally on Windows
 
