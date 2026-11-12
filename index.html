@@ -157,7 +157,7 @@
 <body>
   <header class="topbar">
     <div class="shell nav">
-      <a class="brand" href="/" aria-label="CineLanka VIP home"><img src="/cinelanka-logo.jpg" alt="CineLanka VIP — Movies and TV Series"></a>
+      <a class="brand" href="./" aria-label="CineLanka VIP home"><img src="./cinelanka-logo.jpg" alt="CineLanka VIP — Movies and TV Series"></a>
       <nav class="nav-links" aria-label="Movie categories">
         <a class="active" href="#catalog" data-nav-filter="All">▣ All Movies</a>
         <a href="#catalog" data-nav-filter="TV Series">▣ TV Shows</a>
@@ -196,7 +196,7 @@
       <div class="catalog-layout">
         <div class="grid" id="catalog-grid" aria-live="polite"></div>
         <aside class="sidebar">
-          <div class="side-card brand-badge"><img src="/cinelanka-logo.jpg" alt="CineLanka VIP Movies and TV Series"></div>
+          <div class="side-card brand-badge"><img src="./cinelanka-logo.jpg" alt="CineLanka VIP Movies and TV Series"></div>
           <div class="side-card">
             <h2>Oyage next movie eka balanna</h2>
             <p>Collection ekata aluth films add karanawa. Oyata ona eka hoyanna search karanna.</p>
@@ -262,6 +262,7 @@
     let activeFilter = "All";
     let requestedTitle = null;
     let isAdmin = false;
+    const isGithubPages = location.hostname.toLowerCase().endsWith(".github.io");
     const grid = document.querySelector("#catalog-grid");
     const search = document.querySelector("#search");
     const dialogs = {
@@ -295,6 +296,14 @@
     }
 
     async function loadSession() {
+      if (isGithubPages) {
+        isAdmin = false;
+        document.querySelector("#admin-login-button").hidden = true;
+        document.querySelector("#admin-logout-button").hidden = true;
+        document.querySelector("#admin-banner").hidden = true;
+        document.querySelector("#footer-admin-login").hidden = true;
+        return;
+      }
       const session = await api("/api/session");
       isAdmin = session.isAdmin;
       document.querySelector("#admin-login-button").hidden = isAdmin;
@@ -303,6 +312,12 @@
     }
 
     async function loadTitles() {
+      if (isGithubPages) {
+        titles.splice(0, titles.length);
+        document.querySelector("#catalog-caption").textContent = "CineLanka VIP · Public website";
+        render();
+        return;
+      }
       const result = await api("/api/titles");
       titles.splice(0, titles.length, ...result.titles);
       document.querySelector("#catalog-caption").textContent = `${titles.length} ${titles.length === 1 ? "title" : "titles"} in the collection`;
@@ -316,6 +331,15 @@
         `${item.title} ${item.type} ${item.genre} ${item.year}`.toLowerCase().includes(query)
       );
       if (!titles.length) {
+        if (isGithubPages) {
+          grid.innerHTML = `<div class="empty">
+            <span class="empty-mark" aria-hidden="true">▣</span>
+            <h2>CineLanka VIP is online</h2>
+            <p>This GitHub Pages link shows the public website preview. The private movie upload server is not connected yet, so movies, downloads and EZ Cash verification are not available here.</p>
+            <a class="button secondary small" href="https://github.com/lakshancreations26-crypto/cinelanka-vip" target="_blank" rel="noopener">View GitHub project</a>
+          </div>`;
+          return;
+        }
         grid.innerHTML = `<div class="empty">
           <span class="empty-mark" aria-hidden="true">▣</span>
           <h2>Thama movies upload karala naha</h2>
@@ -518,6 +542,11 @@
 
     async function initialize() {
       document.querySelector("#year").textContent = new Date().getFullYear();
+      if (isGithubPages) {
+        await loadSession();
+        await loadTitles();
+        return;
+      }
       try {
         await loadSession();
         await loadTitles();

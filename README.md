@@ -4,6 +4,14 @@ This is a small, single-owner movie catalog. Visitors can browse and download
 published titles; adding titles, viewing payment receipts, and approving paid
 access require the administrator password.
 
+## Public GitHub Pages preview
+
+GitHub Pages can serve the public, static website preview at
+<https://lakshancreations26-crypto.github.io/cinelanka-vip/>. GitHub Pages
+cannot run this project's Python server. The preview intentionally disables
+admin login and clearly states that uploads, downloads and payment verification
+are unavailable until the Python backend is deployed separately.
+
 ## Run locally on Windows
 
 1. Install Python 3.13 if it is not already installed.
